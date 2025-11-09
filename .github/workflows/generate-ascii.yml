@@ -10,6 +10,17 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Debug workspace
+        run: |
+            echo "PWD=$(pwd)"
+            echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+            ls -la
+            echo "---- git tracked files ----"
+            git ls-files | sed -n '1,200p'
+            echo "---- search for ascii-script.sh (any case) ----"
+            find . -maxdepth 4 -type f -iname "*ascii*script*.sh" -print
+
+
       - name: Verify script exists
         run: |
           test -f ./ascii-script.sh || { echo "ascii-script.sh not found"; exit 1; }
