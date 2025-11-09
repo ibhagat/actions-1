@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
-sudo apt-get install cowsay -y
-cowsay -f dragon "Run for cover, I am a DRAGON....RAWR" >> dragon.txt
+set -euo pipefail
+
+# Always refresh package lists before installing
+sudo apt-get update -y
+sudo apt-get install -y cowsay
+
+# Generate the ASCII art and save it
+cowsay -f dragon "Run for cover, I am a DRAGON....RAWR" | tee dragon.txt
+
+# Basic checks / output
 grep -i "dragon" dragon.txt
 cat dragon.txt
 ls -ltra
