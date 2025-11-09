@@ -4,36 +4,53 @@ on:
   push:
 
 jobs:
-  ascii_job:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+      - name: Update apt cache
+        run: sudo apt-get update -y
 
-      - name: Debug workspace
-        run: |
-            echo "PWD=$(pwd)"
-            echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-            ls -la
-            echo "---- git tracked files ----"
-            git ls-files | sed -n '1,200p'
-            echo "---- search for ascii-script.sh (any case) ----"
-            find . -maxdepth 4 -type f -iname "*ascii*script*.sh" -print
+      - name: Install cowsay
+        run: sudo apt-get install -y cowsay
 
+      - name: Generate dragon ASCII
+        run: cowsay -f dragon "Run for cover, I am a DRAGON...RAWR" | tee dragon.txt
 
-      - name: Verify script exists
-        run: |
-          test -f ./.github/workflows/ascii-script.sh || { echo "ascii-script.sh not found"; exit 1; }
+      - name: (Optional) Sleep 30s
+        run: sleep 30
 
-      - name: Normalize line endings (if needed)
-        run: |
-          sed -i 's/\r$//' ./.github/workflows/ascii-script.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dragon
+          path: dragon.txt
 
-      - name: List Repo Files
-        run: ls -ltra
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dragon
+          path: .
 
-      - name: Execute script
-        shell: bash
-        run: |
-          chmod +x ./.github/workflows/ascii-script.sh
-          ./.github/workflows/ascii-script.sh
+      - name: (Optional) Sleep 10s
+        run: sleep 10
+
+      - name: Verify file contains 'dragon'
+        run: grep -i "dragon" dragon.txt
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dragon
+          path: .
+
+      - name: Read file
+        run: cat dragon.txt
+
+      - name: Deploy
+        run: echo "Deploying ... .. .."
