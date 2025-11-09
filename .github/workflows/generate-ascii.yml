@@ -23,11 +23,11 @@ jobs:
 
       - name: Verify script exists
         run: |
-          test -f ./ascii-script.sh || { echo "ascii-script.sh not found"; exit 1; }
+          test -f ./.github/workflows/ascii-script.sh || { echo "ascii-script.sh not found"; exit 1; }
 
       - name: Normalize line endings (if needed)
         run: |
-          sed -i 's/\r$//' ./ascii-script.sh
+          sed -i 's/\r$//' ./.github/workflows/ascii-script.sh
 
       - name: List Repo Files
         run: ls -ltra
@@ -35,5 +35,5 @@ jobs:
       - name: Execute script
         shell: bash
         run: |
-          chmod +x ./ascii-script.sh
-          ./ascii-script.sh
+          chmod +x ./.github/workflows/ascii-script.sh
+          ./.github/workflows/ascii-script.sh
