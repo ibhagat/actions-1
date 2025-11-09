@@ -1,19 +1,28 @@
 name: Generate ASCII Artwork
 
 on:
-  push
+  push:
 
 jobs:
-    ascii_job:
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout Repo
-          uses: actions/checkout@v5
-        
-        - name: List Repo Files
-          run: ls -ltra
+  ascii_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-        - name: Executing Shell Script
-          run: |
-            chmod +x ascii-script.sh
-            ./ascii-script.sh
+      - name: Verify script exists
+        run: |
+          test -f ./ascii-script.sh || { echo "ascii-script.sh not found"; exit 1; }
+
+      - name: Normalize line endings (if needed)
+        run: |
+          sed -i 's/\r$//' ./ascii-script.sh
+
+      - name: List Repo Files
+        run: ls -ltra
+
+      - name: Execute script
+        shell: bash
+        run: |
+          chmod +x ./ascii-script.sh
+          ./ascii-script.sh
