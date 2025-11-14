@@ -12,10 +12,10 @@ on:
     types:
       - opened
       - closed
-    paths-ignore:       # workflow will only run when a pull request that includes a change on any file other than README.md
-      - README.md
-    branches:           # configures your workflow to only run on pull requests that target specific branches
-      - main
+    paths-ignore:
+      - README.md  # workflow runs only if files other than README.md are changed
+    branches:
+      - main       # only runs on pull requests targeting 'main'
 
 jobs:
   hello:
