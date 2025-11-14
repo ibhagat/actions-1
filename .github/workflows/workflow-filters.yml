@@ -22,4 +22,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Show Event
-        run: echo "This workflow ran for event: ${{ github.event_name }}"
+        run: |
+          echo "This workflow ran for event: ${{ github.event_name }}"
